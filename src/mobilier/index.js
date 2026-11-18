@@ -43,7 +43,7 @@ const LIBELLES = {
   bureau: "Bureau", fauteuil_bureau: "Fauteuil de bureau", ecran: "Écran", lampe_bureau: "Lampe de bureau", etageres: "Étagères murales",
   baignoire: "Baignoire", douche: "Douche vitrée", lavabo: "Lavabo + meuble", wc: "WC suspendu", miroir: "Miroir", seche_serviettes: "Sèche-serviettes",
   lave_linge: "Lave-linge", seche_linge: "Sèche-linge", etagere_buanderie: "Étagère buanderie", panier_linge: "Panier à linge",
-  plante: "Plante", coussin: "Coussin", cadre: "Cadre", vase: "Vase", horloge: "Horloge", rideaux: "Rideaux", petit_tapis: "Petit tapis",
+  plante: "Plante", coussin: "Coussin", cadre: "Cadre", vase: "Vase", horloge: "Horloge", rideaux: "Rideaux", petit_tapis: "Petit tapis", reveil: "Réveil connecté", console_jeux: "Console de jeux",
   plafonnier: "Plafonnier", suspension: "Suspension", spots: "Spots encastrés", lampadaire: "Lampadaire", lampe_chevet: "Lampe de chevet", ruban_led: "Ruban LED",
   escalier_colimacon: "Escalier colimaçon", echelle: "Échelle de mezzanine", station_aspirateur: "Station aspirateur robot", filet: "Filet tendu", garde_corps: "Garde-corps", porte: "Porte", fenetre: "Fenêtre", baie: "Baie vitrée",
 };
@@ -126,6 +126,8 @@ const MESURES = {
   filet: {"d":[3.28,0.08,2.28],"f":"suspendu","t":1198},
   garde_corps: {"d":[2,1,0.07],"f":"sol","t":168},
   porte: {"d":[1.01,2.1,0.15],"f":"mur","t":560},
+  reveil: {"d":[0.14,0.09,0.08],"f":"pose","t":120,"r":"media"},
+  console_jeux: {"d":[0.13,0.41,0.26],"f":"pose","t":160,"r":"media"},
 };
 // </catalogue>
 

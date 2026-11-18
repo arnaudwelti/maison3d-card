@@ -1,8 +1,9 @@
-// Décoration : plantes, coussins, cadres, vase, horloge murale, rideaux, petit tapis.
+// Décoration : plantes, coussins, cadres, vase, horloge murale, rideaux, petit tapis,
+// appareils connectés posés (réveil connecté, console de jeux).
 // Objets muraux (cadre, horloge, rideaux) : origine au sol, dos contre le mur en z = −p/2,
 // `hauteur` = hauteur du centre (ou du haut pour les rideaux).
 import * as THREE from "three";
-import { matBois, matTissu, matMat, matMetal, matCeramique, matFeuillage, matAffiche, matMotif, matVerre, couleur, resoudre } from "./materiaux.js";
+import { matBois, matTissu, matMat, matMetal, matCeramique, matFeuillage, matAffiche, matMotif, matVerre, matLaque, matEmissif, couleur, resoudre } from "./materiaux.js";
 import { boite, cyl, maille, geo, geoBoite, geoTour, geoIco, geoCyl, geoPlan, geoSphere, meuble, tige } from "./outils.js";
 
 // ---------------------------------------------------------------------------
@@ -221,5 +222,46 @@ export function petit_tapis(opts = {}) {
   const g = meuble("petit_tapis", [largeur, 0.012, profondeur], { fixation: "sol" });
   boite(g, largeur, 0.008, profondeur, resoudre(bordure, matTissu), 0, 0, 0);
   boite(g, largeur - 0.1, 0.003, profondeur - 0.1, resoudre(c, matTissu), 0, 0.008, 0);
+  return g;
+}
+
+// ---------------------------------------------------------------------------
+// Réveil connecté (type Mi Smart Clock) : boîtier en coin, dos en tissu, écran incliné
+// nommé « ecran » (role "media" : il s'allume quand l'enceinte joue).
+// ---------------------------------------------------------------------------
+export function reveil(opts = {}) {
+  const { couleur: c = "gris_chaud" } = opts;
+  const L = 0.14, H = 0.085, P = 0.075;
+  const g = meuble("reveil", [L, H, P], { fixation: "pose", interactif: true, role: "media", animations: { ecran: "emissive" } });
+  const corps = resoudre(c, matTissu), noir = matMat("#1d1f22");
+  boite(g, L, 0.012, P, matLaque("blanc"), 0, 0, 0, { r: 0.004 });
+  // dos en coin (pavé incliné) et façade noire inclinée de 15°
+  boite(g, L, H - 0.012, P * 0.55, corps, 0, 0.012, -P * 0.2, { r: 0.008 });
+  const f = new THREE.Group();
+  f.position.set(0, 0.012, P * 0.12);
+  f.rotation.x = -0.26;
+  boite(f, L - 0.004, H - 0.016, 0.012, noir, 0, 0, 0, { r: 0.003 });
+  const e = maille(f, geoPlan(L - 0.022, H - 0.034), matEmissif("#14161a", { roughness: 0.2 }), 0, (H - 0.016) / 2, 0.0065);
+  e.name = "ecran";
+  g.add(f);
+  return g;
+}
+
+// ---------------------------------------------------------------------------
+// Console de jeux debout (coques blanches galbées, cœur noir, socle, liseré lumineux
+// nommé « ecran », role "media" : il s'allume quand la console est en marche).
+// ---------------------------------------------------------------------------
+export function console_jeux(opts = {}) {
+  const { hauteur: H = 0.39, profondeur: P = 0.26 } = opts;
+  const g = meuble("console_jeux", [0.12, H + 0.02, P], { fixation: "pose", interactif: true, role: "media", animations: { ecran: "emissive" } });
+  const blanc = matLaque("blanc_pur"), noir = matMat("#1b1c1f");
+  cyl(g, 0.065, 0.012, noir, 0, 0, 0, { seg: 16 });
+  boite(g, 0.05, H, P - 0.03, noir, 0, 0.012, 0, { r: 0.01 });
+  for (const sx of [-1, 1]) {
+    const coque = maille(g, geoBoite(0.022, H + 0.01, P, 0.01, 2), blanc, sx * 0.034, 0.012 + H / 2, 0, { sx: 1, sz: 1 });
+    coque.rotation.z = sx * 0.035;
+  }
+  const lis = maille(g, geoPlan(0.006, H * 0.86), matEmissif("#14161a", { roughness: 0.3 }), 0.026, 0.012 + H / 2, P / 2 - 0.012, {});
+  lis.name = "ecran";
   return g;
 }

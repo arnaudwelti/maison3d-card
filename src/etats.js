@@ -7,6 +7,7 @@ import * as THREE from "three";
 const BLANC_CHAUD = 2700;
 const GRIS = new THREE.Color(0x9a9a9a);
 const NOIR = new THREE.Color(0, 0, 0);
+const ECRAN_MEDIA = new THREE.Color(0x7fb2ff);
 const ETATS_LAVE_LINGE_ACTIFS = ["running"];
 
 // ------------------------------------------------------------------------------------------------
@@ -306,6 +307,16 @@ export class GestionEtats {
         // Robot rond garé devant la station : masqué pendant le nettoyage
         const robot = l.meuble.objet.getObjectByName("robot");
         if (robot) robot.visible = !(s && ["cleaning", "returning", "paused"].includes(s.state));
+      } else if (l.role === "media") {
+        // Écran (TV, réveil connecté, liseré de console) : vif en lecture, doux en veille allumée
+        const ecran = l.meuble.objet.getObjectByName("ecran");
+        const mat = ecran && ecran.material;
+        if (mat && mat.emissive) {
+          const etat = s ? s.state : "off";
+          const force = etat === "playing" ? 0.9 : ["on", "idle", "paused", "buffering"].includes(etat) ? 0.35 : 0;
+          mat.emissive.copy(ECRAN_MEDIA).multiplyScalar(force);
+          mat.emissiveIntensity = force ? 1 : 0;
+        }
       }
     }
   }
